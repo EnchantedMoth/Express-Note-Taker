@@ -5,7 +5,7 @@ const fs = require('fs').promises
 
 router.get('/', (req, res) => {
     readFromFile('./db/db.json')
-    .then(data => res.json(JSON.parse(data)))
+    .then(notes => res.json(JSON.parse(notes)))
 });
 
 router.post('/', (req, res) => {
@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
         const newNote = {
             title,
             text,
-            note_id: uuid()
+            id: uuid()
         };
 
         readAndAppend(newNote, './db/db.json')
@@ -31,8 +31,17 @@ router.post('/', (req, res) => {
     }
 });
 
-router.delete('/', (req, res) => {
-    
+router.delete('/:id', (req, res) => {
+    readFromFile('./db/db.json')
+    .then(notes => {
+        const parsedNotes = JSON.parse(notes)
+
+        const filteredNotes = parsedNotes.filter((parsedNotes) => {
+            return parsedNotes.id !== req.params.id;
+        });
+        console.log('filtered:', filteredNotes)
+    })
+
 })
 
 
