@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const uuid = require('../helpers/uuid')
-const { readFromFile, readAndAppend } = require('../helpers/fsUtils')
+const { readFromFile, writeToFile, readAndAppend } = require('../helpers/fsUtils')
 const fs = require('fs').promises
 
 router.get('/', (req, res) => {
@@ -40,9 +40,12 @@ router.delete('/:id', (req, res) => {
             return parsedNotes.id !== req.params.id;
         });
         console.log('filtered:', filteredNotes)
-    })
 
-})
+        writeToFile('./db/db.json', filteredNotes);
+        res.json(filteredNotes)
+    });
+
+});
 
 
 module.exports = router
